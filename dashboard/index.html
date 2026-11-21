@@ -3,12 +3,93 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Token Radar: pre-token protocols ranked by implied value</title>
+<title>Token Radar — pre-token launch board</title>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
-<a class="skip" href="#board">Skip to the board</a>
-<main id="board" tabindex="-1" aria-busy="true"></main>
+<header class="top">
+  <div class="brand">
+    <div class="mark">◉</div>
+    <div>
+      <h1>Token Radar</h1>
+      <p class="tag">Pre-token protocols ranked by implied value — snapshot <span id="asOf"></span>, <span id="watchCount"></span> on the house watchlist, <span id="boardCount"></span> rows</p>
+    </div>
+  </div>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section class="modelcard">
+  <h2 id="mv"></h2>
+  <p class="mono" id="modelMath"></p>
+  <p class="fine">Implied value is this radar's own claim, derived only from the snapshot's TVL, 7-day change and age — never a hardcoded list. Protocols that already trade a token are set aside in the Live market view, never mixed into the ranking. A protocol that records no token may still hold one its record does not carry; "pre-token" means exactly that.</p>
+</section>
+
+<nav class="tabs">
+  <button class="tab is-on" data-view="board">Board</button>
+  <button class="tab" data-view="live">Live market</button>
+  <button class="tab" data-view="about">Method</button>
+</nav>
+
+<section class="filters" id="filterBar">
+  <input id="q" type="search" placeholder="Search name, slug, chain…" autocomplete="off">
+  <select id="scope">
+    <option value="all">All rows</option>
+    <option value="watch">Watchlist only (40)</option>
+    <option value="early">Early radar only</option>
+  </select>
+  <select id="chain"><option value="">All chains</option></select>
+  <select id="cat"><option value="">All categories</option></select>
+  <select id="sort">
+    <option value="implied">Sort: implied value</option>
+    <option value="tvl">Sort: TVL</option>
+    <option value="growth">Sort: 7d growth</option>
+    <option value="age">Sort: age</option>
+    <option value="rank">Sort: rank</option>
+  </select>
+  <span id="shown"></span>
+</section>
+
+<main id="viewBoard" class="view is-on">
+  <div class="tablewrap"><table id="board">
+    <thead><tr>
+      <th>#</th><th class="l">Protocol</th><th class="l">Category</th><th class="l">Chains</th>
+      <th>TVL</th><th>7d</th><th>Age</th><th>Implied value</th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</main>
+
+<section id="detail" class="detail" hidden>
+  <button class="back" id="back">← Back to board</button>
+  <div id="detailBody"></div>
+</section>
+
+<main id="viewLive" class="view" hidden>
+  <p class="fine">These protocols already trade a token. The market prices them; the radar does not rank them — they show here so a reader can tell a live token from a launch still to come.</p>
+  <div class="tablewrap"><table id="livetab">
+    <thead><tr><th class="l">Protocol</th><th class="l">Category</th><th>TVL</th><th>Market cap</th><th>MCap / TVL</th><th>7d</th></tr></thead>
+    <tbody id="liveBody"></tbody>
+  </table></div>
+</main>
+
+<section id="viewAbout" class="view" hidden>
+  <div class="about">
+    <h2>How the implied value is built</h2>
+    <p class="mono" id="modelMath2"></p>
+    <ul class="fine">
+      <li><b>Size discount</b> — a launch floats a marginal token supply, so a bigger pool dilutes: implied value per dollar of TVL falls with TVL.</li>
+      <li><b>Momentum</b> — the 7-day TVL change, clamped to −60…+120%, lifts or trims the multiple.</li>
+      <li><b>Age</b> — protocols that ran longest without a token have less launch left; young ones get more optionality.</li>
+      <li><b>Completeness</b> — rows whose TVL, growth and listing date are all reported score higher: the signal is verifiable.</li>
+    </ul>
+    <h2>What a farm step costs</h2>
+    <p class="fine">Every plan names the capital, the gas on the chain named (Ethereum $10–25, elsewhere under $1), the weekly cadence and a hold window sized to the protocol's age — 90 days for the youngest, 45 for the rest. Nothing in a plan pays a third party.</p>
+    <p class="fine" id="srcNote"></p>
+  </div>
+</section>
+
+<footer class="fine">Data: DefiLlama public API snapshot, sealed. Implied values are this entry's model, not a prediction that a token will be issued, and not a make.fun claim.</footer>
+
 <script src="../data.js"></script>
 <script src="app.js"></script>
 </body>
